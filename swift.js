@@ -9,8 +9,8 @@ Changed by Jan Dammshaeuser <mail@jandamm.de>
 
 module.exports = function(hljs) {
   var SWIFT_KEYWORDS = {
-      keyword: '__COLUMN__ __FILE__ __FUNCTION__ __LINE__ as as! as? associativity ' +
-        'break case catch class continue convenience default defer deinit didSet do ' +
+      keyword: '_ __COLUMN__ __FILE__ __FUNCTION__ __LINE__ as as! as? associativity ' +
+        'associatedtype break case catch class continue convenience default defer deinit didSet do ' +
         'dynamic dynamicType else enum extension fallthrough false fileprivate final for func ' +
         'get guard if import in indirect infix init inout internal is lazy left let ' +
         'mutating nil none nonmutating open operator optional override postfix precedence ' +
@@ -55,7 +55,7 @@ module.exports = function(hljs) {
   };
   var NUMBERS = {
       className: 'number',
-      begin: '\\b([\\d_]+(\\.[\\deE_]+)?|0x[a-fA-F0-9_]+(\\.[a-fA-F0-9p_]+)?|0b[01_]+|0o[0-7_]+)\\b',
+      begin: '\\b(\\d[\\d_]*(\\.[\\deE_]+)?|0x[a-fA-F0-9_]+(\\.[a-fA-F0-9p_]+)?|0b[01_]+|0o[0-7_]+)\\b',
       relevance: 0
   };
   var QUOTE_STRING_MODE = hljs.inherit(hljs.QUOTE_STRING_MODE, {
