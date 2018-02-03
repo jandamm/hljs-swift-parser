@@ -1,0 +1,29 @@
+{
+	"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+				"*"
+			],
+			"name": "project",
+			"path": "."
+		},
+		{
+			"path": "helper"
+		},
+		{
+			"path": "test",
+			"file_exclude_patterns":
+			[
+				".gitkeep"
+			],
+		},
+		{
+			"path": "templates"
+		},
+		{
+			"path": "node_modules/highlight.js"
+		}
+	]
+}

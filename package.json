@@ -1,0 +1,14 @@
+{
+  "name": "hljs-swift-parser",
+  "version": "1.0.0",
+  "description": "Swift parser for hljs",
+  "main": "swift.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jan Dammshäuser",
+  "license": "ISC",
+  "dependencies": {
+    "highlight.js": "^9.12.0"
+  }
+}
