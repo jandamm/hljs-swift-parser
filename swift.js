@@ -3,10 +3,11 @@ Language: Swift
 Author: Chris Eidhof <chris@eidhof.nl>
 Contributors: Nate Cook <natecook@gmail.com>, Alexander Lichter <manniL@gmx.net>
 Category: system
+Changed by Jan Dammshaeuser <mail@jandamm.de>
 */
 
 
-function(hljs) {
+module.exports = function(hljs) {
   var SWIFT_KEYWORDS = {
       keyword: '__COLUMN__ __FILE__ __FUNCTION__ __LINE__ as as! as? associativity ' +
         'break case catch class continue convenience default defer deinit didSet do ' +
