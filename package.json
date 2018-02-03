@@ -4,7 +4,8 @@
   "description": "Swift parser for hljs",
   "main": "swift.js",
   "scripts": {
-    "test": "npm run placeFile && npm run clear && npm run prepare && open ./test",
+    "test": "npm run build && open ./test",
+    "build": "npm run placeFile && npm run clear && npm run prepare",
     "clear": "rm -r ./test && mkdir ./test",
     "placeFile": "cp swift.js ./node_modules/highlight.js/lib/languages",
     "prepare": "node ./helper/prepareTemplates.js ./templates ./test"

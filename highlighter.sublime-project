@@ -25,5 +25,12 @@
 		{
 			"path": "node_modules/highlight.js"
 		}
-	]
+	],
+	"build_systems":
+    [
+        {
+            "name": "Test",
+            "shell_cmd": "npm run build"
+        }
+    ]
 }
