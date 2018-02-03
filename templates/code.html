@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-us">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="../node_modules/highlight.js/styles/xcode.css">
+		<style type="text/css">code{tab-size:4;}</style>
+	</head>
+	<body>
+		<article class="post">
+			<section id="post-body">
+				<pre><code class="language-swift">
+public struct SafeZip2Sequence&lt;Sequence1: Sequence, Sequence2: Sequence&gt; {
+	fileprivate let sequence1: Sequence1
+	fileprivate let sequence2: Sequence2
+}
+
+associatedtype Element where Self.Element == Self.Iterator.Element
+associatedtype Iterator : IteratorProtocol
+public func makeIterator() -&gt; Self.Iterator
+					
+extension SafeZip2Sequence: Sequence {
+	public struct Iterator {
+		fileprivate var iterator1: Sequence1.Iterator
+		fileprivate var iterator2: Sequence2.Iterator
+	}
+}
+					
+extension SafeZip2Sequence: Sequence {
+	public func makeIterator() -&gt; Iterator {
+		return Iterator(iterator1: sequence1.makeIterator(), iterator2: sequence2.makeIterator())
+	}
+}
+
+extension SafeZip2Sequence: Sequence {
+	public enum Element {
+		case pair(first: Sequence1.Element, second: Sequence2.Element)
+		case first(Sequence1.Element)
+		case second(Sequence2.Element)
+  	}
+}
+					
+extension SafeZip2Sequence.Iterator: IteratorProtocol {
+	public mutating func next() -&gt; SafeZip2Sequence.Element? {
+		let value1 = iterator1.next()
+		let value2 = iterator2.next()
+		return Element(first: value1, second: value2)
+	}
+}
+
+fileprivate extension SafeZip2Sequence.Element {
+	init?(first: Sequence1.Element?, second: Sequence2.Element?) {
+		switch (first, second) {
+		case let (first?, second?):
+			self = .pair(first: first, second: second)
+		case let (first?, nil):
+			self = .first(first)
+		case let (nil, second?):
+			self = .second(second)
+		default:
+			return nil
+		}
+	}
+}
+
+public func safeZip&lt;Sequence1: Sequence, Sequence2: Sequence&gt;(_ sequence1: Sequence1, _ sequence2: Sequence2) -&gt; SafeZip2Sequence&lt;Sequence1, Sequence2&gt; {
+	return SafeZip2Sequence(sequence1: sequence1, sequence2: sequence2)
+}
+
+public func safeZip&lt;Sequence1, Sequence2&gt;(_ sequence1: Sequence1, _ sequence2: Sequence2, execute: (SafeZip2Sequence&lt;Sequence1, Sequence2&gt;.Element) -&gt; Void) {
+	for value in safeZip(sequence1, sequence2) {
+		execute(value)
+	}
+}
+
+for element in safeZip(labels, texts) {
+	print(element)
+}
+
+safeZip(labels, texts) { print($0) }
+					
+safeZip(labels, texts, execute: doSomething)
+					
+public extension Sequence {
+	func mySafeZip&lt;S: Sequence&gt;(_ sequence: S) -&gt; SafeZip2Sequence&lt;Self, S&gt; {
+		return safeZip(self, sequence)
+	}
+
+	func mySafeZip&lt;S: Sequence&gt;(_ sequence: S, execute: (SafeZip2Sequence&lt;Self, S&gt;.Element) -&gt; Void) {
+		return safeZip(self, sequence, execute: execute)
+	}
+}
+				</code></pre>
+			</section>
+		</article>
+	</body>
+</html>
