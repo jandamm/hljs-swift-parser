@@ -6,7 +6,6 @@ Category: system
 Changed by Jan Dammshaeuser <mail@jandamm.de>
 */
 
-
 module.exports = function(hljs) {
   var SWIFT_KEYWORDS = {
       keyword: '_ __COLUMN__ __FILE__ __FUNCTION__ __LINE__ as as! as? associativity ' +
@@ -15,30 +14,38 @@ module.exports = function(hljs) {
         'get guard if import in indirect infix init inout internal is lazy left let ' +
         'mutating nil none nonmutating open operator optional override postfix precedence ' +
         'prefix private protocol Protocol public repeat required rethrows return ' +
-        'right self Self set static struct subscript super switch throw throws true ' +
+        'right self set static struct subscript super switch throw throws true ' +
         'try try! try? Type typealias unowned var weak where while willSet',
       literal: 'true false nil',
       built_in: 'abs advance alignof alignofValue anyGenerator assert assertionFailure ' +
         'bridgeFromObjectiveC bridgeFromObjectiveCUnconditional bridgeToObjectiveC ' +
         'bridgeToObjectiveCUnconditional c contains count countElements countLeadingZeros ' +
-        'debugPrint debugPrintln distance dropFirst dropLast dump encodeBitsAsWords ' +
+        'debugPrint debugPrintln distance dropFirst dropLast dump Element encodeBitsAsWords ' +
         'enumerate equal fatalError filter find getBridgedObjectiveCType getVaList ' +
         'indices insertionSort isBridgedToObjectiveC isBridgedVerbatimToObjectiveC ' +
-        'isUniquelyReferenced isUniquelyReferencedNonObjC join lazy lexicographicalCompare ' +
+        'isUniquelyReferenced isUniquelyReferencedNonObjC Iterator IteratorProtocol join lazy lexicographicalCompare ' +
         'map max maxElement min minElement numericCast overlaps partition posix ' +
         'precondition preconditionFailure print println quickSort readLine reduce reflect ' +
-        'reinterpretCast reverse roundUpToAlignment sizeof sizeofValue sort split ' +
-        'startsWith stride strideof strideofValue swap toString transcode ' +
+        'reinterpretCast reverse roundUpToAlignment Sequence sizeof sizeofValue sort split ' +
+        'startsWith stride strideof strideofValue String swap toString transcode ' +
         'underestimateCount unsafeAddressOf unsafeBitCast unsafeDowncast unsafeUnwrap ' +
         'unsafeReflect withExtendedLifetime withObjectAtPlusZero withUnsafePointer ' +
         'withUnsafePointerToObject withUnsafeMutablePointer withUnsafeMutablePointers ' +
         'withUnsafePointer withUnsafePointers withVaList zip'
     };
 
+  var BUILTIN_TYPE = {
+    className: 'built_in',
+    begin: '(UI|NS|CG)[A-Z][\\w\u00C0-\u02B8\']+'
+  };
   var TYPE = {
     className: 'type',
     begin: '\\b[A-Z][\\w\u00C0-\u02B8\']*',
-    relevance: 0
+    keywords: SWIFT_KEYWORDS,
+    relevance: 0,
+    contains: [
+      BUILTIN_TYPE
+    ]
   };
   var BLOCK_COMMENT = hljs.COMMENT(
     '/\\*',
@@ -104,7 +111,21 @@ module.exports = function(hljs) {
         end: '\\{',
         excludeEnd: true,
         contains: [
-          hljs.inherit(hljs.TITLE_MODE, {begin: /[A-Za-z$_][\u00C0-\u02B80-9A-Za-z$_]*/})
+          hljs.inherit(hljs.TITLE_MODE, {begin: /[A-Za-z$_][\u00C0-\u02B80-9A-Za-z$_]*/}),
+          {
+            className: 'params',
+            begin: /\</, end: /\>/, endsParent: true,
+            keywords: SWIFT_KEYWORDS,
+            contains: [
+              'self',
+              NUMBERS,
+              TYPE,
+              QUOTE_STRING_MODE,
+              hljs.C_BLOCK_COMMENT_MODE,
+              {begin: ':'} // relevance booster
+            ],
+            illegal: /["'<>:]/
+          }
         ]
       },
       {

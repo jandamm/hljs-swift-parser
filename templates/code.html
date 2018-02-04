@@ -4,14 +4,18 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="../xcode.css">
+		<link rel="stylesheet" href="../product/swift.css">
 		<style type="text/css">code{tab-size:4;}</style>
 	</head>
 	<body>
-		<article class="post">
-			<section id="post-body">
 				<pre><code class="language-swift">
-public struct SafeZip2Sequence&lt;Sequence1: Sequence, Sequence2: Sequence&gt;: SomeProtocol {
+import UIKit
+
+protocol X {}
+
+// some comment
+/// doc
+public struct SafeZip2Sequence&lt;Sequence1: Sequence, Sequence2&gt;: X {
 	fileprivate let sequence1: Sequence1
 	fileprivate let sequence2: Sequence2
 }
@@ -76,6 +80,9 @@ public func safeZip&lt;Sequence1, Sequence2&gt;(_ sequence1: Sequence1, _ sequen
 	}
 }
 </code></pre><pre><code class="language-swift">
+let labels = [UILabel()]
+let texts = ["a"]
+
 for element in safeZip(labels, texts) {
 	print(element)
 }
@@ -234,7 +241,5 @@ module.exports = function(hljs) {
   };
 }
 				</code></pre>
-			</section>
-		</article>
 	</body>
 </html>

@@ -1,0 +1,68 @@
+/*
+
+XCode style (c) Jan Dammshäuser <mail@jandamm.de>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #fff;
+  color: black;
+}
+
+/* Plain Text */
+.hljs-class .hljs-title,
+.hljs-function .hljs-title,
+.hljs-class .hljs-params .hljs-type {
+  color: #000;
+}
+
+/* Comments */
+.hljs-comment {
+  color: #0433FF;
+}
+
+/* Documentation Markup (Keywords) */
+{
+  color: #AA7942;
+}
+
+/* Strings */
+.hljs-string {
+  color: #929292;
+}
+
+/* Numbers */
+.hljs-number {
+  color: #FF40FF;
+}
+
+/* Keywords */
+.hljs-keyword,
+.hljs-meta {
+  color: #FF9300;
+}
+
+/* Attributes */
+.hljs-attributes{
+  color: #942192;
+}
+
+/* Project: Class Types */
+.hljs-type {
+  color: #FF2600;
+}
+
+/* Project: Variables */
+.hljs-subst
+
+.hljs-doctag,
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
