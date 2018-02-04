@@ -76,6 +76,12 @@ module.exports = function(hljs) {
     }],
     illegal: /["'<>:]/
   };
+  const ASSOC = {
+    className: 'assoc',
+    begin: /(associatedtype|typealias) /, end: /[(\n| |:)]/,
+    keywords: 'associatedtype typealias',
+    contains: [TYPE]
+  }
   const BLOCK_COMMENT = hljs.COMMENT(
     '/\\*',
     '\\*/',
@@ -106,6 +112,7 @@ module.exports = function(hljs) {
       BLOCK_COMMENT,
       TYPE,
       NUMBERS,
+      ASSOC,
       {
         className: 'function',
         beginKeywords: 'func', end: '{', excludeEnd: true,

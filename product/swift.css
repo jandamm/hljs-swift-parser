@@ -14,7 +14,9 @@ XCode style (c) Jan Dammshäuser <mail@jandamm.de>
 
 /* Plain Text */
 .hljs-class .hljs-title,
-.hljs-function .hljs-title {
+.hljs-function .hljs-title,
+.hljs-assoc .hljs-type, 
+.hljs-assoc .hljs-type .hljs-built_in {
   color: #000;
 }
 
