@@ -1,4 +1,11 @@
 {
+	"build_systems":
+	[
+		{
+			"name": "Test",
+			"shell_cmd": "npm run build"
+		}
+	],
 	"folders":
 	[
 		{
@@ -13,11 +20,11 @@
 			"path": "helper"
 		},
 		{
-			"path": "test",
 			"file_exclude_patterns":
 			[
 				".gitkeep"
 			],
+			"path": "test"
 		},
 		{
 			"path": "templates"
@@ -25,12 +32,5 @@
 		{
 			"path": "node_modules/highlight.js"
 		}
-	],
-	"build_systems":
-    [
-        {
-            "name": "Test",
-            "shell_cmd": "npm run build"
-        }
-    ]
+	]
 }

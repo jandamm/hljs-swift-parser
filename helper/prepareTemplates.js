@@ -35,7 +35,7 @@ function createDir(dir) {
 }
 
 // Constants
-const preCode = '<pre><code class="language-swift">';
+const preCode = '<pre><code class="language-';
 const postCode = '</code></pre>';
 
 
@@ -46,14 +46,16 @@ function interpretFile(fileContent) {
   let result = fileParts.shift();
 
   fileParts.forEach((filePart) => {
-    const parts = filePart.split(postCode);
+    const idx = filePart.indexOf('"');
+    const parts = filePart.slice(idx + 2).split(postCode);
 
+    const lang = filePart.slice(0, idx);
     const code = replaceHtmlEscapingChars(parts[0]);
     const text = parts[1];
 
-    const highlight = hljs.highlight("swift", code).value;
+    const highlight = hljs.highlight(lang, code).value;
 
-    result += preCode + highlight + postCode + text;
+    result += `${preCode + lang}">${highlight + postCode + text}`;
   });
 
   return result;
