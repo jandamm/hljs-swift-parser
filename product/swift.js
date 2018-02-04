@@ -6,6 +6,10 @@ Category: system
 Changed by Jan Dammshaeuser <mail@jandamm.de>
 */
 
+function clone(a) {
+   return JSON.parse(JSON.stringify(a));
+}
+
 module.exports = function(hljs) {
   var SWIFT_KEYWORDS = {
       keyword: '_ __COLUMN__ __FILE__ __FUNCTION__ __LINE__ as as! as? associativity ' +
@@ -20,18 +24,21 @@ module.exports = function(hljs) {
       built_in: 'abs advance alignof alignofValue anyGenerator assert assertionFailure ' +
         'bridgeFromObjectiveC bridgeFromObjectiveCUnconditional bridgeToObjectiveC ' +
         'bridgeToObjectiveCUnconditional c contains count countElements countLeadingZeros ' +
-        'debugPrint debugPrintln distance dropFirst dropLast dump Element encodeBitsAsWords ' +
+        'debugPrint debugPrintln distance dropFirst dropLast dump encodeBitsAsWords ' +
         'enumerate equal fatalError filter find getBridgedObjectiveCType getVaList ' +
         'indices insertionSort isBridgedToObjectiveC isBridgedVerbatimToObjectiveC ' +
-        'isUniquelyReferenced isUniquelyReferencedNonObjC Iterator IteratorProtocol join lazy lexicographicalCompare ' +
+        'isUniquelyReferenced isUniquelyReferencedNonObjC join lazy lexicographicalCompare ' +
         'map max maxElement min minElement numericCast overlaps partition posix ' +
         'precondition preconditionFailure print println quickSort readLine reduce reflect ' +
-        'reinterpretCast reverse roundUpToAlignment Sequence sizeof sizeofValue sort split ' +
-        'startsWith stride strideof strideofValue String swap toString transcode ' +
+        'reinterpretCast reverse roundUpToAlignment sizeof sizeofValue sort split ' +
+        'startsWith stride strideof strideofValue swap toString transcode ' +
         'underestimateCount unsafeAddressOf unsafeBitCast unsafeDowncast unsafeUnwrap ' +
         'unsafeReflect withExtendedLifetime withObjectAtPlusZero withUnsafePointer ' +
         'withUnsafePointerToObject withUnsafeMutablePointer withUnsafeMutablePointers ' +
         'withUnsafePointer withUnsafePointers withVaList zip'
+    };
+   var SWIFT_TYPES = {
+      built_in: 'Element Iterator IteratorProtocol Sequence String Void'
     };
 
   var BUILTIN_TYPE = {
@@ -41,11 +48,29 @@ module.exports = function(hljs) {
   var TYPE = {
     className: 'type',
     begin: '\\b[A-Z][\\w\u00C0-\u02B8\']*',
-    keywords: SWIFT_KEYWORDS,
+    keywords: SWIFT_TYPES,
     relevance: 0,
+    illegal: ':',
     contains: [
       BUILTIN_TYPE
     ]
+  };
+  var VAR = {
+    className: 'variable',
+    begin: '\\b[a-z][\\w\u00C0-\u02B8\']*',
+    keywords: SWIFT_KEYWORDS,
+    relevance: 0,
+    illegal: ':'
+  };
+  var GENERIC_TYPES = {
+    begin: /</, end: />/, endsParent: true,
+    contains: [{
+      begin: ': ',
+      contains: [
+        TYPE
+      ]
+    }],
+    illegal: /["'<>:]/
   };
   var BLOCK_COMMENT = hljs.COMMENT(
     '/\\*',
@@ -82,12 +107,7 @@ module.exports = function(hljs) {
         className: 'function',
         beginKeywords: 'func', end: '{', excludeEnd: true,
         contains: [
-          hljs.inherit(hljs.TITLE_MODE, {
-            begin: /[A-Za-z$_][0-9A-Za-z$_]*/
-          }),
-          {
-            begin: /</, end: />/
-          },
+          GENERIC_TYPES,
           {
             className: 'params',
             begin: /\(/, end: /\)/, endsParent: true,
@@ -95,6 +115,7 @@ module.exports = function(hljs) {
             contains: [
               'self',
               NUMBERS,
+              GENERIC_TYPES,
               QUOTE_STRING_MODE,
               hljs.C_BLOCK_COMMENT_MODE,
               {begin: ':'} // relevance booster
@@ -106,26 +127,24 @@ module.exports = function(hljs) {
       },
       {
         className: 'class',
-        beginKeywords: 'struct protocol class extension enum',
+        beginKeywords: 'struct protocol class enum',
         keywords: SWIFT_KEYWORDS,
         end: '\\{',
         excludeEnd: true,
         contains: [
           hljs.inherit(hljs.TITLE_MODE, {begin: /[A-Za-z$_][\u00C0-\u02B80-9A-Za-z$_]*/}),
-          {
-            className: 'params',
-            begin: /\</, end: /\>/, endsParent: true,
-            keywords: SWIFT_KEYWORDS,
-            contains: [
-              'self',
-              NUMBERS,
-              TYPE,
-              QUOTE_STRING_MODE,
-              hljs.C_BLOCK_COMMENT_MODE,
-              {begin: ':'} // relevance booster
-            ],
-            illegal: /["'<>:]/
-          }
+         GENERIC_TYPES
+        ]
+      },
+      {
+        className: 'class',
+        beginKeywords: 'extension',
+        keywords: SWIFT_KEYWORDS,
+        end: '\\{',
+        excludeEnd: true,
+        contains: [
+          TYPE,
+         GENERIC_TYPES
         ]
       },
       {
