@@ -6,6 +6,12 @@ Category: system
 Changed by Jan Dammshaeuser <mail@jandamm.de>
 */
 
+// Missing patterns:
+// function(x)
+
+// Errors:
+// Variable vs method
+
 function clone(a) {
    return JSON.parse(JSON.stringify(a));
 }
@@ -50,24 +56,12 @@ module.exports = function(hljs) {
     className: 'type',
     begin: '\\b[A-Z][\\w\u00C0-\u02B8\']*',
     keywords: SWIFT_TYPES,
-    relevance: 0,
+    relevance: 2,
     illegal: ':',
   };
   const BUILTIN_TYPE = {
     className: 'built_in_type',
     begin: '(UI|NS|CG)[A-Z][\\w\u00C0-\u02B8\']+',
-  };
-  const VAR = {
-    begin: /[A-Za-z][0-9]?\./, end: /\.|\)|\n/,
-    illegal: /[( ]/,
-    relevance: 0,
-    contains: [
-      {
-        className: 'variable',
-        keywords: SWIFT_VAR,
-        begin: /[a-z][a-zA-Z0-9_]*/
-      }
-    ]
   };
   const GENERIC_TYPES = {
     begin: /</, end: />/, endsParent: true,
@@ -79,22 +73,34 @@ module.exports = function(hljs) {
     }],
     illegal: /["':]/
   };
-  const FUNC = {
-    lexemes: '[A-Za-z][0-9]?.[a-z][a-zA-Z0-9_]*()',
-    illegal: ' :/.',
+  const VAR = { // not working as look behind ahead is broken
+    className: 'variable',
+    keywords: SWIFT_VAR,
+    begin: /(?<=[a-zA-Z0-9_][.])[a-z][\w\u00C0-\u02B8\']*\b(?=[^\(])/
+  };
+  const FUNC = { // not working as look behind ahead is broken
+    className: 'method',
+    keywords: SWIFT_FUNC,
+    begin: /(?<=([a-zA-Z0-9_][.]|[\n ]))[a-z][\w\u00C0-\u02B8\']*\b(?=[\(])/
+  };
+
+  const CLASS_PROP = { // poor solution as look behind ahead is broken
+    begin: /[A-Za-z0-9]\./, end: /[\.|\,|\)|\n]/,
+    illegal: /[ .,:\)\n]/, excludeEnd: true,
     contains: [
+      TYPE,
       {
         className: 'method',
         keywords: SWIFT_FUNC,
-        begin: /[a-z][a-zA-Z0-9_]*/
+        begin: /\b[a-z][\w\u00C0-\u02B8\']*/,
+        endsParent: true, 
       }
     ]
   };
   const ASSOC = {
     className: 'assoc',
     begin: /(associatedtype|typealias) /, end: /[(\n| |:)]/,
-    keywords: 'associatedtype typealias',
-    contains: [TYPE]
+    keywords: 'associatedtype typealias'
   };
   const BLOCK_COMMENT = hljs.COMMENT(
     '/\\*',
@@ -128,6 +134,7 @@ module.exports = function(hljs) {
       TYPE,
       NUMBERS,
       ASSOC,
+      CLASS_PROP,
       {
         className: 'function',
         beginKeywords: 'func', end: '{', excludeEnd: true,

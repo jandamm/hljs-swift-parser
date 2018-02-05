@@ -50,7 +50,7 @@ extension SafeZip2Sequence: Sequence {
 extension SafeZip2Sequence.Iterator: IteratorProtocol {
 	public mutating func next() -&gt; SafeZip2Sequence.Element? {
 		let value1 = iterator1.next()
-		let value2 = iterator2.next()
+		let value2 = iterator2.Next()
 		return Element(first: value1, second: value2)
 	}
 }

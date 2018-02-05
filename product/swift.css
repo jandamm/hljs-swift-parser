@@ -14,9 +14,7 @@ XCode style (c) Jan Dammshäuser <mail@jandamm.de>
 
 /* Plain Text */
 .hljs-class .hljs-title,
-.hljs-function .hljs-title,
-.hljs-assoc .hljs-type, 
-.hljs-assoc .hljs-type .hljs-built_in {
+.hljs-function .hljs-title {
   color: #000;
 }
 
@@ -52,8 +50,12 @@ XCode style (c) Jan Dammshäuser <mail@jandamm.de>
   color: #FF2600;
 }
 
-/* Project: Variables Method */
-.hljs-method,
+/* Project: Method */
+.hljs-method {
+  color: #00FDFF;
+}
+
+/* Project: Variables */
 .hljs-variable {
   color: #FFFB00;
 }
@@ -64,10 +66,16 @@ XCode style (c) Jan Dammshäuser <mail@jandamm.de>
   color: #00F900;
 }
 
-/* Other: Variables Method */
-.hljs-method .hljs-built_in,
-.hljs-variable .hljs-built_in {
+/* Other: Method */
+.hljs-method .hljs-built_in {
   color: #00FDFF;
+  font-weight: bold;
+}
+
+/* Other: Variables */
+.hljs-variable .hljs-built_in {
+  color: #FFFB00;
+  font-weight: bold;
 }
 
 .hljs-doctag,
