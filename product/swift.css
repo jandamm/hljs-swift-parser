@@ -37,7 +37,8 @@ XCode style (c) Jan Dammshäuser <mail@jandamm.de>
 
 /* Keywords */
 .hljs-keyword,
-.hljs-meta {
+.hljs-meta,
+.hljs-literal {
   color: #FF9300;
 }
 
@@ -51,18 +52,21 @@ XCode style (c) Jan Dammshäuser <mail@jandamm.de>
   color: #FF2600;
 }
 
-/* Project: Variables */
+/* Project: Variables Method */
+.hljs-method,
 .hljs-variable {
   color: #FFFB00;
 }
 
 /* Other: Class Types */
-.hljs-type .hljs-built_in {
+.hljs-type .hljs-built_in,
+.hljs-built_in_type {
   color: #00F900;
 }
 
-/* Other: Variables */
-.hljs-subst .hljs-built_in {
+/* Other: Variables Method */
+.hljs-method .hljs-built_in,
+.hljs-variable .hljs-built_in {
   color: #00FDFF;
 }
 

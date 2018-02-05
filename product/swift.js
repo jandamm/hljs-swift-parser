@@ -12,7 +12,7 @@ function clone(a) {
 
 module.exports = function(hljs) {
   const SWIFT_KEYWORDS = {
-    keyword: '_ __COLUMN__ __FILE__ __FUNCTION__ __LINE__ as as! as? associativity ' +
+    keyword: '__COLUMN__ __FILE__ __FUNCTION__ __LINE__ as as! as? associativity ' +
       'associatedtype break case catch class continue convenience default defer deinit didSet do ' +
       'dynamic dynamicType else enum extension fallthrough false fileprivate final for func ' +
       'get guard if import in indirect infix init inout internal is lazy left let ' +
@@ -20,7 +20,7 @@ module.exports = function(hljs) {
       'prefix private protocol Protocol public repeat required rethrows return ' +
       'right self set static struct subscript super switch throw throws true ' +
       'try try! try? Type typealias unowned var weak where while willSet',
-    literal: 'true false nil',
+    literal: 'true false nil _',
   };
   const SWIFT_FUNC = {
     built_in: 'abs advance alignof alignofValue anyGenerator assert assertionFailure ' +
@@ -30,7 +30,7 @@ module.exports = function(hljs) {
       'enumerate equal fatalError filter find getBridgedObjectiveCType getVaList ' +
       'indices insertionSort isBridgedToObjectiveC isBridgedVerbatimToObjectiveC ' +
       'isUniquelyReferenced isUniquelyReferencedNonObjC join lazy lexicographicalCompare ' +
-      'map max maxElement min minElement numericCast overlaps partition posix ' +
+      'makeIterator map max maxElement min minElement next numericCast overlaps partition posix ' +
       'precondition preconditionFailure print println quickSort readLine reduce reflect ' +
       'reinterpretCast reverse roundUpToAlignment sizeof sizeofValue sort split ' +
       'startsWith stride strideof strideofValue swap toString transcode ' +
@@ -52,19 +52,22 @@ module.exports = function(hljs) {
     keywords: SWIFT_TYPES,
     relevance: 0,
     illegal: ':',
-    contains: [
-      {
-        className: 'built_in',
-        begin: '(UI|NS|CG)[A-Z][\\w\u00C0-\u02B8\']+'
-      }
-    ]
+  };
+  const BUILTIN_TYPE = {
+    className: 'built_in_type',
+    begin: '(UI|NS|CG)[A-Z][\\w\u00C0-\u02B8\']+',
   };
   const VAR = {
-    className: 'variable',
-    begin: '\\b[a-z][\\w\u00C0-\u02B8\']*[^(]',
-    keywords: SWIFT_KEYWORDS,
+    begin: /[A-Za-z][0-9]?\./, end: /\.|\)|\n/,
+    illegal: /[( ]/,
     relevance: 0,
-    illegal: ':'
+    contains: [
+      {
+        className: 'variable',
+        keywords: SWIFT_VAR,
+        begin: /[a-z][a-zA-Z0-9_]*/
+      }
+    ]
   };
   const GENERIC_TYPES = {
     begin: /</, end: />/, endsParent: true,
@@ -74,14 +77,25 @@ module.exports = function(hljs) {
         TYPE
       ]
     }],
-    illegal: /["'<>:]/
+    illegal: /["':]/
+  };
+  const FUNC = {
+    lexemes: '[A-Za-z][0-9]?.[a-z][a-zA-Z0-9_]*()',
+    illegal: ' :/.',
+    contains: [
+      {
+        className: 'method',
+        keywords: SWIFT_FUNC,
+        begin: /[a-z][a-zA-Z0-9_]*/
+      }
+    ]
   };
   const ASSOC = {
     className: 'assoc',
     begin: /(associatedtype|typealias) /, end: /[(\n| |:)]/,
     keywords: 'associatedtype typealias',
     contains: [TYPE]
-  }
+  };
   const BLOCK_COMMENT = hljs.COMMENT(
     '/\\*',
     '\\*/',
@@ -91,7 +105,7 @@ module.exports = function(hljs) {
   );
   const NUMBERS = {
       className: 'number',
-      begin: '\\b([^$]\\d[\\d_]*(\\.[\\deE_]+)?|0x[a-fA-F0-9_]+(\\.[a-fA-F0-9p_]+)?|0b[01_]+|0o[0-7_]+)\\b',
+      begin: '\\b([^$A-Za-z]\\d[\\d_]*(\\.[\\deE_]+)?|0x[a-fA-F0-9_]+(\\.[a-fA-F0-9p_]+)?|0b[01_]+|0o[0-7_]+)\\b',
       relevance: 0
   };
   const SUBST = {
@@ -110,6 +124,7 @@ module.exports = function(hljs) {
       QUOTE_STRING_MODE,
       hljs.C_LINE_COMMENT_MODE,
       BLOCK_COMMENT,
+      BUILTIN_TYPE,
       TYPE,
       NUMBERS,
       ASSOC,

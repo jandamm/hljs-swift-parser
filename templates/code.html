@@ -35,7 +35,7 @@ extension SafeZip2Sequence: Sequence {
 </code></pre><pre><code class="language-swift">
 extension SafeZip2Sequence: Sequence {
 	public func makeIterator() -&gt; Iterator {
-		return Iterator(iterator1: sequence1.makeIterator(), iterator2: sequence2.makeIterator())
+		return Iterator(iterator1: sequence1.makeIterator(), iterator2: sequence2.makeIterator)
 	}
 }
 </code></pre><pre><code class="language-swift">
