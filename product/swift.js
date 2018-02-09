@@ -73,28 +73,28 @@ module.exports = function(hljs) {
     }],
     illegal: /["':]/
   };
-  const VAR = { // not working as look behind ahead is broken
+  const VAR = { // not working as there is an error in the hljs core
     className: 'variable',
     keywords: SWIFT_VAR,
-    begin: /(?<=[a-zA-Z0-9_][.])[a-z][\w\u00C0-\u02B8\']*\b(?=[^\(])/
+    begin: /\b[a-z][\w\u00C0-\u02B8\']*\b(?![\(])/g,
+    endsParent: true,
   };
-  const FUNC = { // not working as look behind ahead is broken
+  const FUNC = { // not working as there is an error in the hljs core
     className: 'method',
     keywords: SWIFT_FUNC,
-    begin: /(?<=([a-zA-Z0-9_][.]|[\n ]))[a-z][\w\u00C0-\u02B8\']*\b(?=[\(])/
+    begin: /\b[a-z][\w\u00C0-\u02B8\']*(?=\()/g,
+    endsParent: true,
   };
+  
 
-  const CLASS_PROP = { // poor solution as look behind ahead is broken
+  const CLASS_PROP = { // not working as there is an error in the hljs core
+    className: 'arst',
     begin: /[A-Za-z0-9]\./, end: /[\.|\,|\)|\n]/,
-    illegal: /[ .,:\)\n]/, excludeEnd: true,
+    illegal: /[ .,:\)\n]/, 
     contains: [
       TYPE,
-      {
-        className: 'method',
-        keywords: SWIFT_FUNC,
-        begin: /\b[a-z][\w\u00C0-\u02B8\']*/,
-        endsParent: true, 
-      }
+      VAR,
+      FUNC
     ]
   };
   const ASSOC = {
